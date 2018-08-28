@@ -98,6 +98,13 @@ public class AddressBook {
                                                       + PERSON_DATA_PREFIX_EMAIL + "EMAIL";
     private static final String COMMAND_ADD_EXAMPLE = COMMAND_ADD_WORD + " John Doe p/98765432 e/johnd@gmail.com";
 
+    private static final String COMMAND_EDIT_WORD = "edit";
+    private static final String COMMAND_EDIT_DESC = "Edits a person's details on the address book";
+    private static final String COMMAND_EDIT_PARAMETERS = "NAME "
+            + PERSON_DATA_PREFIX_PHONE + "PHONE_NUMBER "
+            + PERSON_DATA_PREFIX_EMAIL + "EMAIL";
+    private static final String COMMAND_EDIT_EXAMPLE = COMMAND_EDIT_WORD + " John Doe p/98765432 e/johnd@gmail.com";
+
     private static final String COMMAND_FIND_WORD = "find";
     private static final String COMMAND_FIND_DESC = "Finds all persons whose names contain any of the specified "
                                         + "keywords (case-sensitive) and displays them as a list with index numbers.";
@@ -369,6 +376,8 @@ public class AddressBook {
         switch (commandType) {
             case COMMAND_ADD_WORD:
                 return executeAddPerson(commandArgs);
+            case COMMAND_EDIT_WORD:
+                return executeEditPerson(commandArgs);
             case COMMAND_FIND_WORD:
                 return executeFindPersons(commandArgs);
             case COMMAND_LIST_WORD:
@@ -386,6 +395,43 @@ public class AddressBook {
         default:
             return getMessageForInvalidCommandInput(commandType, getUsageInfoForAllCommands());
         }
+    }
+
+    /**
+     * Edit a person details in address book. We will remove the person from address book and add a new person entry in.
+     *
+     * @return feedback display message for the operation result
+     */
+    private static String executeEditPerson(String commandArgs) {
+        final Optional<String[]> decodeResult = decodePersonFromString(commandArgs);
+
+        // add the person as specified
+        final String[] personToAdd = decodeResult.get();
+
+        ArrayList<String[]> toBeDisplayed = getAllPersonsInAddressBook();
+
+        // checks through addressbook for person to edit
+        for (String[] ppl : toBeDisplayed) {
+            if (ppl[0].equalsIgnoreCase(personToAdd[0])) {
+                deletePersonFromAddressBook(ppl);
+                addPersonToAddressBook(personToAdd);
+                return getMessageForEditPerson(personToAdd);
+            }
+
+        }
+        return MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+    }
+
+    /**
+     * Constructs a feedback message for a successful edit person command execution.
+     *
+     * @see #executeAddPerson(String)
+     * @param editedPerson person who was successfully edited
+     * @return successful add person feedback message
+     */
+    private static String getMessageForEditPerson(String[] editedPerson) {
+        return String.format(MESSAGE_ADDED,
+                getNameFromPerson(editedPerson), getPhoneFromPerson(editedPerson), getEmailFromPerson(editedPerson));
     }
 
     /**
