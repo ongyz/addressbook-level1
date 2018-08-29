@@ -435,7 +435,7 @@ public class AddressBook {
     }
 
     /**
-     * List all person in address book in a sorted order. Added a comparator to sort
+     * List all person in address book in a sorted kjasdhorder. Added a comparator to sort
      *
      * @return feedback display message for the operation result
      */
