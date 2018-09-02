@@ -25,7 +25,7 @@ import java.util.*;
 
 /**
  * This class is used to maintain a list of person data which are saved
- * in a text file. Useless comment.
+ * in a text file. Useless comment. added in feature 1.
  **/
 public class AddressBook {
 
